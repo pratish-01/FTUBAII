@@ -31,7 +31,7 @@ import swim from "@/assets/icons/swim.png";
 import wifi from "@/assets/icons/wifi.png";
 import location from "@/assets/icons/location.png";
 import edit from "@/assets/icons/edit.png";
-import scan from "@/assets/icons/scan.png";
+import scan from "@/assets/icons/scanner.png";
 
 export default {
   google,
