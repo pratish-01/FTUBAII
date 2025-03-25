@@ -1,5 +1,12 @@
 import React, { useState, useEffect, useRef } from "react";
-import { View, Text, Button, ScrollView, StyleSheet, TouchableOpacity } from "react-native";
+import {
+  View,
+  Text,
+  Button,
+  ScrollView,
+  StyleSheet,
+  TouchableOpacity,
+} from "react-native";
 import { CameraView, useCameraPermissions, Camera } from "expo-camera";
 import { useIsFocused } from "@react-navigation/native";
 import Header from "@/components/header";
@@ -24,7 +31,9 @@ export default function HomeScreen() {
   };
 
   if (!permission) {
-    return <Text style={styles.textCenter}>Requesting camera permission...</Text>;
+    return (
+      <Text style={styles.textCenter}>Requesting camera permission...</Text>
+    );
   }
 
   if (!permission.granted) {
@@ -59,7 +68,10 @@ export default function HomeScreen() {
           ) : (
             <Text style={styles.noDataText}>No data scanned</Text>
           )}
-          <TouchableOpacity style={styles.button} onPress={() => setScanned(false)}>
+          <TouchableOpacity
+            style={styles.button}
+            onPress={() => setScanned(false)}
+          >
             <Text style={styles.buttonText}>Scan Again</Text>
           </TouchableOpacity>
         </View>
@@ -120,7 +132,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   button: {
-    backgroundColor: "#0061FF", // Primary Blue Color
+    backgroundColor: "#0061FF",
     paddingVertical: 12,
     paddingHorizontal: 20,
     borderRadius: 8,
@@ -131,7 +143,7 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.2,
     shadowRadius: 3,
-    elevation: 5
+    elevation: 5,
   },
   buttonText: {
     color: "#fff",
@@ -139,4 +151,3 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
 });
-

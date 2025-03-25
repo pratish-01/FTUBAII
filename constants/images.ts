@@ -7,7 +7,8 @@ import barChart from "@/assets/images/bar-chart.png";
 import whiteGradient from "@/assets/images/white-gradient.png";
 import map from "@/assets/images/map.png";
 import noResult from "@/assets/images/no-result.png";
-import profile from "@/assets/images/Men.jpg";
+import profile from "@/assets/images/Avtar_1.png";
+import Avenger from "@/assets/images/Avengers.jpg";
 
 export default {
   onboarding,
@@ -19,5 +20,6 @@ export default {
   whiteGradient,
   map,
   noResult,
-  profile
+  profile,
+  Avenger,
 };
