@@ -8,36 +8,47 @@ import {
   StatusBar,
   Image,
 } from "react-native";
-import { useNavigation } from "@react-navigation/native";
 import images from "@/constants/images";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import { useRouter } from "expo-router";
+import ForgotPassword from "@/components/forgetPassword";
+import { useDispatch, useSelector } from "react-redux";
+import { setForgetPassword } from "@/app/redux/slices/authSlice";
+import { RootState } from "@/app/redux/store"; // Import the RootState type
 
 const Login = () => {
-  const navigation = useNavigation();
+  const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
 
+  const dispatch = useDispatch();
+
+  // Type the useSelector to correctly read from Redux state
+  const showForgetPassword = useSelector(
+    (state: RootState) => state.auth.showForgetPassword
+  );
+
   const handleLogin = () => {
-    // Perform login logic here (e.g., form validation, API call)
     if (email && password) {
       console.log("Login button pressed with email: ", email);
-      // Add your authentication logic here
+      // Add your login logic here
     } else {
       console.log("Please fill out both fields.");
     }
   };
 
-  const router = useRouter(); // Get the router instance for navigation
-
   const handleSignUp = () => {
-    router.push("/signUp"); // Use router.push to navigate to the login page
+    router.push("/signUp");
+  };
+
+  const handleForgetPassword = () => {
+    dispatch(setForgetPassword(!showForgetPassword));
   };
 
   return (
     <SafeAreaView className="flex-1 bg-white">
-      <StatusBar barStyle="dark-content" backgroundColor="#0b1222" />
+      <StatusBar barStyle="dark-content" backgroundColor="#0000" />
       <View className="flex items-center justify-center px-6 py-[12rem]">
         {/* Logo and Title */}
         <View className="px-4 flex-row justify-between items-center gap-4 mb-6">
@@ -98,13 +109,12 @@ const Login = () => {
           <Text className="text-lg text-white font-bold">Continue</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity
-          // onPress={() => navigation.navigate("ForgotPassword")}
-          className="mt-4"
-        >
+        {/* Forgot Password */}
+        <TouchableOpacity onPress={handleForgetPassword} className="mt-4">
           <Text className="text-gray-400">Forgot Password?</Text>
         </TouchableOpacity>
 
+        {/* Sign Up Section */}
         <View className="flex-row items-center mt-6">
           <Text className="text-gray-400">Don't have an account? </Text>
           <TouchableOpacity onPress={handleSignUp}>
@@ -112,6 +122,12 @@ const Login = () => {
           </TouchableOpacity>
         </View>
       </View>
+
+      {/* Forgot Password Modal */}
+      <ForgotPassword
+        visible={showForgetPassword}
+        onClose={handleForgetPassword}
+      />
     </SafeAreaView>
   );
 };

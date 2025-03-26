@@ -11,6 +11,7 @@ import {
 import { useNavigation } from "@react-navigation/native";
 import images from "@/constants/images";
 import Icon from "react-native-vector-icons/MaterialIcons";
+import { useRouter } from "expo-router";
 
 const SignUp = () => {
   const navigation = useNavigation();
@@ -20,6 +21,7 @@ const SignUp = () => {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const router = useRouter();
 
   const handleSignUp = () => {
     if (email && password && confirmPassword && name) {
@@ -34,9 +36,13 @@ const SignUp = () => {
     }
   };
 
+  const handleLogin = () => {
+    router.push("/login"); // Use router.push to navigate to the login page
+  };
+
   return (
     <SafeAreaView className="flex-1 bg-white">
-      <StatusBar barStyle="dark-content" backgroundColor="#0b1222" />
+      <StatusBar barStyle="dark-content" backgroundColor="#ffff" />
       <View className="flex items-center justify-center px-6 py-[10rem]">
         {/* Logo and Title */}
         <View className="px-4 flex-row justify-between items-center gap-4 mb-6">
@@ -56,7 +62,7 @@ const SignUp = () => {
           <Text className="text-lg text-gray-600 mb-2">Full Name</Text>
           <View className="flex-row items-center border border-gray-300 rounded-lg p-2">
             <TextInput
-              placeholder="John Doe"
+              placeholder="Gaurav Singh"
               placeholderTextColor="#9ca3af"
               value={name}
               onChangeText={setName}
@@ -139,7 +145,7 @@ const SignUp = () => {
         {/* Already have an account? */}
         <View className="flex-row items-center mt-6">
           <Text className="text-gray-400">Already have an account? </Text>
-          <TouchableOpacity onPress={() => navigation.navigate("Login")}>
+          <TouchableOpacity onPress={handleLogin}>
             <Text className="text-[#a4da8f] font-bold">Log In</Text>
           </TouchableOpacity>
         </View>
