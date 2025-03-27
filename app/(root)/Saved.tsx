@@ -11,15 +11,15 @@ import { useRouter } from "expo-router";
 import icons from "@/constants/icons";
 
 const savedProducts = [
-  { id: 1, title: "Organic Apples", date: "March 25, 2025", icon: icons.lock },
+  { id: 1, title: "Organic Apples", date: "March 25, 2025", icon: icons.saved },
   {
     id: 2,
     title: "Whole Grain Bread",
     date: "March 24, 2025",
-    icon: icons.lock,
+    icon: icons.saved,
   },
-  { id: 3, title: "Fresh Milk", date: "March 23, 2025", icon: icons.lock },
-  { id: 4, title: "Eggs (12 Pack)", date: "March 22, 2025", icon: icons.lock },
+  { id: 3, title: "Fresh Milk", date: "March 23, 2025", icon: icons.saved },
+  { id: 4, title: "Eggs (12 Pack)", date: "March 22, 2025", icon: icons.saved },
 ];
 
 const SavedProducts = () => {
