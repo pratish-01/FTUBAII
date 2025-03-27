@@ -15,7 +15,7 @@ interface ForgotPasswordProps {
 }
 
 const ForgotPassword = ({ visible, onClose }: ForgotPasswordProps) => {
-  const [step, setStep] = useState(1); // Manage the current step
+  const [step, setStep] = useState(1);
   const [email, setEmail] = useState("");
   const [otp, setOtp] = useState("");
   const [newPassword, setNewPassword] = useState("");

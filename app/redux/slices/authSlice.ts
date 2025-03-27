@@ -1,24 +1,39 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 interface AuthState {
-  showForgetPassword: boolean;
+  isSignUp: boolean;
+  fullName: string;
+  email: string;
+  password: string;
+  confirmPassword: string;
 }
 
 const initialState: AuthState = {
-  showForgetPassword: false,
+  isSignUp: false,
+  fullName: "",
+  email: "",
+  password: "",
+  confirmPassword: "",
 };
 
-// Create a slice of state for auth
 const authSlice = createSlice({
   name: "auth",
   initialState,
   reducers: {
-    setForgetPassword: (state, action) => {
-      state.showForgetPassword = action.payload;
+    toggleAuthMode: (state) => {
+      state.isSignUp = !state.isSignUp;
+    },
+    updateField: (
+      state,
+      action: PayloadAction<{ key: keyof AuthState; value: string }>
+    ) => {
+      return {
+        ...state,
+        [action.payload.key]: action.payload.value,
+      };
     },
   },
 });
 
-// Export the actions and reducer
-export const { setForgetPassword } = authSlice.actions;
+export const { toggleAuthMode, updateField } = authSlice.actions;
 export default authSlice.reducer;

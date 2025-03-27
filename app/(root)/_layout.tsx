@@ -3,7 +3,7 @@ import { ActivityIndicator } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function AppLayout() {
-  let isLogged = false; // Change this based on your login logic
+  let isLogged = true; // Change this based on your login logic
 
   // Loading state (optional)
   // if (loading) {

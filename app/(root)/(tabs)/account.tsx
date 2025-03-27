@@ -17,7 +17,7 @@ import images from "@/constants/images";
 interface SettingsItemProp {
   icon: ImageSourcePropType;
   title: string;
-  route?: string; // Added route property
+  route?: string;
   onPress?: () => void;
   textStyle?: string;
   showArrow?: boolean;
@@ -26,7 +26,6 @@ interface SettingsItemProp {
 const SettingsItem = ({
   icon,
   title,
-  // route, // route from settings data
   onPress,
   textStyle,
   showArrow = true,
@@ -35,7 +34,7 @@ const SettingsItem = ({
 
   return (
     <TouchableOpacity
-      onPress={onPress || (() => navigation.navigate(title))} // Use route or title
+      onPress={onPress || (() => navigation.navigate(title))}
       className="flex flex-row items-center justify-between py-4 bg-white rounded-lg px-4 mb-3"
     >
       <View className="flex flex-row items-center gap-3">
@@ -58,9 +57,8 @@ const Account = () => {
     <SafeAreaView className="h-full bg-white">
       <ScrollView
         showsVerticalScrollIndicator={false}
-        contentContainerClassName="pb-32 px-5"
+        contentContainerClassName="pb-32 px-0"
       >
-        {/* Profile Section */}
         <View className="flex flex-col items-center mt-10">
           <View className="relative">
             <Image
@@ -78,18 +76,18 @@ const Account = () => {
             gaurav.singh@gmail.com
           </Text>
         </View>
-        {/* Settings Section */}
+
         <View className="mt-10">
           {settings.slice(2).map((item, index) => (
             <SettingsItem
               key={index}
               icon={item.icon}
               title={item.title}
-              route={item.title} // Use route from settings
+              route={item.title}
             />
           ))}
         </View>
-        {/* Logout Section */}
+
         <View className="flex flex-col border-t mt-8 pt-5 border-gray-300">
           <SettingsItem
             icon={icons.logout}
