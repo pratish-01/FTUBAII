@@ -10,9 +10,14 @@ import {
 } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "@/app/redux/store";
-import { toggleAuthMode, updateField } from "@/app/redux/slices/authSlice";
+import {
+  toggleAuthMode,
+  updateField,
+  updateModal,
+} from "@/app/redux/slices/authSlice";
 import images from "@/constants/images";
 import Icon from "react-native-vector-icons/MaterialIcons";
+import ChangePasswordModal from "@/components/forgetPassword";
 
 interface CustomInputProps {
   label: string;
@@ -59,9 +64,8 @@ const CustomInput: React.FC<CustomInputProps> = ({
 
 const AuthScreen: React.FC = () => {
   const dispatch = useDispatch();
-  const { isSignUp, fullName, email, password, confirmPassword } = useSelector(
-    (state: RootState) => state.auth
-  );
+  const { isSignUp, fullName, email, password, confirmPassword, modal } =
+    useSelector((state: RootState) => state.auth);
 
   const handleChange = (key: keyof RootState["auth"], value: string) => {
     dispatch(updateField({ key, value }));
@@ -125,9 +129,19 @@ const AuthScreen: React.FC = () => {
 
         {!isSignUp && (
           <TouchableOpacity className="mt-4">
-            <Text className="text-gray-400">Forgot Password?</Text>
+            <Text
+              className="text-gray-400"
+              onPress={() => dispatch(updateModal(!modal))}
+            >
+              Forgot Password?
+            </Text>
           </TouchableOpacity>
         )}
+
+        <ChangePasswordModal
+          isVisible={modal}
+          onClose={() => dispatch(updateModal(!modal))}
+        />
 
         <View className="flex-row items-center mt-6">
           <Text className="text-gray-400">

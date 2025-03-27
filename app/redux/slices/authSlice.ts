@@ -6,6 +6,7 @@ interface AuthState {
   email: string;
   password: string;
   confirmPassword: string;
+  modal: boolean;
 }
 
 const initialState: AuthState = {
@@ -14,6 +15,7 @@ const initialState: AuthState = {
   email: "",
   password: "",
   confirmPassword: "",
+  modal: false,
 };
 
 const authSlice = createSlice({
@@ -32,8 +34,11 @@ const authSlice = createSlice({
         [action.payload.key]: action.payload.value,
       };
     },
+    updateModal: (state, action) => {
+      state.modal = action.payload;
+    },
   },
 });
 
-export const { toggleAuthMode, updateField } = authSlice.actions;
+export const { toggleAuthMode, updateField, updateModal } = authSlice.actions;
 export default authSlice.reducer;

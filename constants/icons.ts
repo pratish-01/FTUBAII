@@ -32,8 +32,16 @@ import wifi from "@/assets/icons/wifi.png";
 import location from "@/assets/icons/location.png";
 import edit from "@/assets/icons/edit.png";
 import scan from "@/assets/icons/scanner.png";
+import history from "@/assets/icons/History.png";
+import saved from "@/assets/icons/Saved.png";
+import lock from "@/assets/icons/lock.png";
+import trash from "@/assets/icons/Trash.png";
 
 export default {
+  history,
+  trash,
+  saved,
+  lock,
   google,
   home,
   search,
@@ -67,5 +75,5 @@ export default {
   wifi,
   location,
   edit,
-  scan
+  scan,
 };

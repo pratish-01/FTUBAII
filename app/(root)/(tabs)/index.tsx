@@ -17,7 +17,7 @@ const Home = () => {
       <View className="px-5 mt-5">
         <View className="flex-row items-center justify-between">
           <View className="flex-row items-center justify-center space-x-3">
-            <Image source={images.profile} className="w-12 h-12 rounded-full" />
+            <Image source={images.profile} className="w-10 h-10 rounded-lg" />
             <View className="ml-2">
               <Text className="text-[0.8rem] text-gray-500">
                 {getGreeting()}

@@ -1,100 +1,150 @@
+import React from "react";
 import {
-  Alert,
+  TextInput,
   Image,
-  ImageSourcePropType,
   SafeAreaView,
   ScrollView,
   Text,
   TouchableOpacity,
   View,
+  KeyboardAvoidingView,
+  Platform,
 } from "react-native";
-import LinearGradient from "expo-linear-gradient";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "@/app/redux/store";
+import {
+  setName,
+  setEmail,
+  setPhone,
+  setAddress,
+  setDob,
+  setGender,
+} from "@/app/redux/slices/profileSlice";
+import images from "@/constants/images";
 import icons from "@/constants/icons";
-import { settings } from "@/constants/data";
+import { useRouter } from "expo-router";
 
-interface SettingsItemProp {
-  icon: ImageSourcePropType;
-  title: string;
-  onPress?: () => void;
-  textStyle?: string;
-  showArrow?: boolean;
-}
+const Profile: React.FC = () => {
+  const dispatch = useDispatch();
+  const router = useRouter();
+  const { name, email, phone, address, dob, gender } = useSelector(
+    (state: RootState) => state.profile
+  );
 
-const SettingsItem = ({
-  icon,
-  title,
-  onPress,
-  textStyle,
-  showArrow = true,
-}: SettingsItemProp) => (
-  <TouchableOpacity
-    onPress={onPress}
-    className="flex flex-row items-center justify-between py-4 px-3 bg-white rounded-lg shadow-sm mb-2"
-  >
-    <View className="flex flex-row items-center gap-3">
-      <Image source={icon} className="w-6 h-6" />
-      <Text className={`text-lg font-rubik-medium text-black-300 ${textStyle}`}>
-        {title}
-      </Text>
-    </View>
+  const handleChange =
+    (setter: (value: string) => { type: string; payload: string }) =>
+    (text: string) =>
+      dispatch(setter(text));
 
-    {showArrow && <Image source={icons.rightArrow} className="w-4 h-4" />}
-  </TouchableOpacity>
-);
-
-const Profile = () => {
   return (
-    <SafeAreaView className="h-full">
-      {/* Add a modern gradient background */}
-      {/* <LinearGradient
-        colors={["#F3F4F6", "#E5E7EB"]}
-        style={{ flex: 1 }}
-        start={{ x: 0, y: 0 }}
-        end={{ x: 0, y: 1 }}
-      > */}
-      <ScrollView
-        showsVerticalScrollIndicator={false}
-        contentContainerClassName="pb-32 px-5"
+    <SafeAreaView className="h-full bg-white p-6">
+      <View className="flex-row items-center">
+        <TouchableOpacity
+          onPress={() => {
+            router.push("/account");
+          }}
+        >
+          <Image source={icons.backArrow} style={{ width: 30, height: 30 }} />
+        </TouchableOpacity>
+        <Text className="text-xl font-bold text-gray-800 mt-1 ml-[6rem]">
+          Profile Details
+        </Text>
+      </View>
+
+      <KeyboardAvoidingView
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        className="flex-1"
       >
-        {/* Profile Image Section */}
-        <View className="flex items-center mt-8">
-          <View className="relative">
-            <Image
-              source={{ uri: "https://via.placeholder.com/150" }} // replace with actual profile image
-              className="w-32 h-32 rounded-full border-4 border-primary-500"
-            />
-            <TouchableOpacity className="absolute -bottom-2 right-2 bg-white p-2 rounded-full w-10 h-10 shadow-md border border-primary-500">
-              <Image source={icons.edit} className="w-6 h-6" />
-            </TouchableOpacity>
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={{ paddingBottom: 0 }}
+        >
+          <View className="items-center mt-5 mb-3">
+            <View className="relative">
+              <Image
+                source={images.profile}
+                style={{ width: 96, height: 96, borderRadius: 16 }}
+              />
+              <TouchableOpacity className="absolute -bottom-1 -right-1 bg-white rounded-xl w-9 h-9 border border-gray-200 shadow-lg items-center justify-center">
+                <Image
+                  source={icons.edit}
+                  style={{ width: 20, height: 20, tintColor: "#4b5563" }}
+                />
+              </TouchableOpacity>
+            </View>
           </View>
 
-          <Text className="text-2xl font-bold text-gray-800 mt-4">
-            John Doe
-          </Text>
-          <Text className="text-lg text-gray-500">johndoe@example.com</Text>
-        </View>
+          <View className="mt-5">
+            {[
+              {
+                label: "Full Name",
+                value: name,
+                setter: setName,
+                keyboardType: "default",
+              },
+              {
+                label: "Email Address",
+                value: email,
+                setter: setEmail,
+                keyboardType: "email-address",
+              },
+              {
+                label: "Phone Number",
+                value: phone,
+                setter: setPhone,
+                keyboardType: "numeric",
+              },
+              {
+                label: "Address",
+                value: address,
+                setter: setAddress,
+                keyboardType: "default",
+              },
+              {
+                label: "Date of Birth",
+                value: dob,
+                setter: setDob,
+                keyboardType: "numeric",
+              },
+            ].map(({ label, value, setter, keyboardType }) => (
+              <View key={label} className="mb-3">
+                <Text className="text-lg text-gray-600">{label}</Text>
+                <View className="flex-row items-center border border-gray-300 rounded-lg p-2">
+                  <TextInput
+                    value={value}
+                    onChangeText={handleChange(setter)}
+                    placeholder={`Enter your ${label.toLowerCase()}`}
+                    keyboardType={keyboardType as any}
+                    placeholderTextColor="#9ca3af"
+                    className="text-gray-600 flex-1"
+                  />
+                </View>
+              </View>
+            ))}
 
-        {/* Settings Section */}
-        <View className="flex flex-col mt-8">
-          <Text className="text-xl font-semibold text-gray-700 mb-4">
-            Account Settings
-          </Text>
-          {settings.slice(2).map((item, index) => (
-            <SettingsItem key={index} {...item} />
-          ))}
-        </View>
+            <Text className="text-lg text-gray-600">Gender</Text>
+            <View className="flex-row items-center gap-4">
+              {["Male", "Female", "Others"].map((option) => (
+                <TouchableOpacity
+                  key={option}
+                  className={`flex-1 items-center border rounded-lg p-2 ${
+                    gender === option
+                      ? "border-[#a4da8f] bg-[#e8f5e9]"
+                      : "border-gray-300"
+                  }`}
+                  onPress={() => dispatch(setGender(option))}
+                >
+                  <Text className="text-lg text-gray-600">{option}</Text>
+                </TouchableOpacity>
+              ))}
+            </View>
+          </View>
 
-        {/* Logout Section */}
-        <View className="flex flex-col border-t border-primary-200 mt-8 pt-5">
-          <SettingsItem
-            icon={icons.logout}
-            title="Logout"
-            textStyle="text-danger"
-            showArrow={false}
-          />
-        </View>
-      </ScrollView>
-      {/* </LinearGradient> */}
+          <TouchableOpacity className="mt-8 bg-[#a4da8f] rounded-lg py-3 items-center justify-center shadow-md">
+            <Text className="text-white text-lg font-bold">Save Changes</Text>
+          </TouchableOpacity>
+        </ScrollView>
+      </KeyboardAvoidingView>
     </SafeAreaView>
   );
 };

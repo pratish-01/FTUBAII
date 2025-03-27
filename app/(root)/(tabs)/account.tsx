@@ -7,12 +7,18 @@ import {
   Text,
   TouchableOpacity,
   View,
+  Modal,
 } from "react-native";
 
+import { useState } from "react";
 import icons from "@/constants/icons";
-import { useNavigation } from "@react-navigation/native";
+import { useRouter } from "expo-router";
 import { settings } from "@/constants/data";
 import images from "@/constants/images";
+import ChangePasswordModal from "@/components/forgetPassword";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "@/app/redux/store";
+import { updateModal } from "@/app/redux/slices/authSlice";
 
 interface SettingsItemProp {
   icon: ImageSourcePropType;
@@ -30,19 +36,29 @@ const SettingsItem = ({
   textStyle,
   showArrow = true,
 }: SettingsItemProp) => {
-  const navigation = useNavigation();
+  const router = useRouter();
 
   return (
     <TouchableOpacity
-      onPress={onPress || (() => navigation.navigate(title))}
-      className="flex flex-row items-center justify-between py-4 bg-white rounded-lg px-4 mb-3"
+      onPress={onPress || (() => router.push(title))}
+      className="flex flex-row items-center justify-between py-4 bg-white rounded-lg mb-3"
     >
       <View className="flex flex-row items-center gap-3">
-        <Image source={icon} className="w-6 h-6" />
-        <Text
-          className={`text-lg font-rubik-medium text-black-500 ${textStyle}`}
+        <View
+          className={
+            title !== "Logout"
+              ? `bg-slate-200 p-2 rounded-xl`
+              : `p-2 rounded-xl`
+          }
         >
-          {title}
+          <Image source={icon} className="w-6 h-6" />
+        </View>
+        <Text className={`text-[1.3rem] text-gray-800 ${textStyle}`}>
+          {title === "History"
+            ? "Scan History"
+            : title === "Saved"
+            ? "Saved Products"
+            : title}
         </Text>
       </View>
 
@@ -51,34 +67,85 @@ const SettingsItem = ({
   );
 };
 
-const Account = () => {
-  const navigation = useNavigation();
+const DeleteAccountModal = ({ isVisible, onClose, onDelete }) => {
   return (
-    <SafeAreaView className="h-full bg-white">
+    <Modal
+      transparent
+      animationType="fade"
+      visible={isVisible}
+      onRequestClose={onClose}
+    >
+      <View className="flex-1 justify-center items-center bg-black/50">
+        <View className="bg-white p-6 rounded-2xl w-[90%]">
+          <Text className="text-xl font-bold text-gray-800">
+            Delete Account?
+          </Text>
+          <Text className="text-gray-600 mt-2">
+            Are you sure you want to delete your account? This action cannot be
+            undone.
+          </Text>
+
+          <View className="flex-row justify-end mt-5">
+            <TouchableOpacity
+              onPress={onClose}
+              className="px-4 py-2 rounded-lg bg-gray-300 mr-2"
+            >
+              <Text className="text-gray-800">Cancel</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              onPress={onDelete}
+              className="px-4 py-2 rounded-lg bg-red-500"
+            >
+              <Text className="text-white">Delete</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </View>
+    </Modal>
+  );
+};
+
+const Account = () => {
+  const dispatch = useDispatch();
+  const [modalVisible, setModalVisible] = useState(false);
+
+  const { modal } = useSelector((state: RootState) => state.auth);
+
+  const handleDeleteAccount = () => {
+    setModalVisible(false);
+    // Alert.alert(
+    //   "Account Deleted",
+    //   "Your account has been permanently deleted."
+    // );
+  };
+
+  return (
+    <SafeAreaView className="h-full bg-white p-6">
+      <Text className="text-xl font-rubik-bold mt-5 text-black-700">
+        Account
+      </Text>
       <ScrollView
         showsVerticalScrollIndicator={false}
         contentContainerClassName="pb-32 px-0"
       >
-        <View className="flex flex-col items-center mt-10">
-          <View className="relative">
-            <Image
-              source={images.profile}
-              className="w-32 h-32 rounded-full border-4 border-slate-500 shadow-lg"
-            />
-            <TouchableOpacity className="absolute -bottom-4 right-4 bg-white rounded-full p-2 shadow-md border border-slate-300">
-              <Image source={icons.edit} className="w-6 h-6" />
-            </TouchableOpacity>
+        <View className="flex-row items-center mt-[1.5rem]">
+          <Image
+            source={images.profile}
+            className="w-[4.55rem] h-[4.55rem] rounded-2xl"
+          />
+          <View className="ml-4">
+            <Text className="text-[1.4rem] text-gray-800 font-semibold">
+              Gaurav Singh
+            </Text>
+            <Text className="text-lg leading-[2rem] font-bold text-gray-500">
+              gaurav.singh@gmail.com
+            </Text>
           </View>
-          <Text className="text-xl font-rubik-bold mt-5 text-black-700">
-            Gaurav Singh
-          </Text>
-          <Text className="text-md font-rubik-regular text-gray-500">
-            gaurav.singh@gmail.com
-          </Text>
         </View>
 
         <View className="mt-10">
-          {settings.slice(2).map((item, index) => (
+          {settings.map((item, index) => (
             <SettingsItem
               key={index}
               icon={item.icon}
@@ -88,16 +155,41 @@ const Account = () => {
           ))}
         </View>
 
-        <View className="flex flex-col border-t mt-8 pt-5 border-gray-300">
+        <View className="flex flex-col">
+          <SettingsItem
+            icon={icons.lock}
+            title="Change Password"
+            textStyle="text-gray-800"
+            showArrow={false}
+            onPress={() => dispatch(updateModal(!modal))}
+          />
+          <SettingsItem
+            icon={icons.trash}
+            title="Delete Account"
+            textStyle="text-gray-800"
+            showArrow={false}
+            onPress={() => setModalVisible(true)}
+          />
           <SettingsItem
             icon={icons.logout}
             title="Logout"
-            textStyle="text-danger"
+            textStyle="text-red-400"
             showArrow={false}
             onPress={() => Alert.alert("Logged out!")}
           />
         </View>
       </ScrollView>
+
+      <DeleteAccountModal
+        isVisible={modalVisible}
+        onClose={() => setModalVisible(false)}
+        onDelete={handleDeleteAccount}
+      />
+
+      <ChangePasswordModal
+        isVisible={modal}
+        onClose={() => dispatch(updateModal(!modal))}
+      />
     </SafeAreaView>
   );
 };
